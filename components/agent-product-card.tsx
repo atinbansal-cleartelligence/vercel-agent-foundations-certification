@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -15,6 +16,7 @@ export function AgentProductCard({ invocation }: AgentProductCardProps) {
     invocation.state === "input-available"
   ) {
     const id = invocation.input?.productId;
+
     return (
       <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
         Looking up{id ? ` "${id}"` : ""}…
@@ -36,7 +38,9 @@ export function AgentProductCard({ invocation }: AgentProductCardProps) {
     );
   }
 
-  const image = output.images[0];
+  const images = output.images ?? [];
+  const tags = output.tags ?? [];
+  const image = images[0];
 
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
@@ -51,6 +55,7 @@ export function AgentProductCard({ invocation }: AgentProductCardProps) {
           />
         </div>
       )}
+
       <div className="space-y-3 p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -62,12 +67,14 @@ export function AgentProductCard({ invocation }: AgentProductCardProps) {
             </p>
           </div>
         </div>
+
         <p className="line-clamp-3 text-sm text-muted-foreground">
           {output.description}
         </p>
-        {output.tags.length > 0 && (
+
+        {tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {output.tags.slice(0, 5).map((tag) => (
+            {tags.slice(0, 5).map((tag) => (
               <span
                 key={tag}
                 className="rounded-full bg-secondary px-2 py-0.5 text-xs text-muted-foreground"
@@ -77,6 +84,7 @@ export function AgentProductCard({ invocation }: AgentProductCardProps) {
             ))}
           </div>
         )}
+
         <Link
           href={`/products/${output.slug}`}
           className="inline-flex text-sm font-medium text-foreground underline-offset-4 hover:underline"
